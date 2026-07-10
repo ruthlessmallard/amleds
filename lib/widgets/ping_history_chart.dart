@@ -108,7 +108,7 @@ class PingHistoryChart extends StatelessWidget {
     if (result.responseTimeMs == null) return 0.1;
     
     // Normalize: max 500ms = full height
-    final maxMs = 500;
+    const maxMs = 500;
     final normalized = result.responseTimeMs! / maxMs;
     return normalized.clamp(0.1, 1.0);
   }

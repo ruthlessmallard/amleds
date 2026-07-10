@@ -76,11 +76,9 @@ class RetroTerminalTheme {
       primary: amberColor,
       secondary: amberDim,
       surface: surfaceColor,
-      background: backgroundColor,
       onPrimary: backgroundColor,
       onSecondary: backgroundColor,
       onSurface: amberColor,
-      onBackground: amberColor,
     ),
     
     // AppBar theme
