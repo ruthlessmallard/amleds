@@ -23,6 +23,8 @@ class StatusIndicator extends StatelessWidget {
         return RetroTerminalTheme.vitalsCritical;
       case PingStatus.timeout:
         return RetroTerminalTheme.vitalsFlatline;
+      default:
+        return RetroTerminalTheme.vitalsFlatline;
     }
   }
 
@@ -36,6 +38,8 @@ class StatusIndicator extends StatelessWidget {
         return Icons.error_outline;
       case PingStatus.timeout:
         return Icons.cancel;
+      default:
+        return Icons.help_outline;
     }
   }
 
@@ -49,6 +53,8 @@ class StatusIndicator extends StatelessWidget {
         return 'CRITICAL';
       case PingStatus.timeout:
         return 'FLATLINE';
+      default:
+        return 'UNKNOWN';
     }
   }
 
@@ -109,6 +115,8 @@ class StatusDot extends StatelessWidget {
         return RetroTerminalTheme.vitalsCritical;
       case PingStatus.timeout:
         return RetroTerminalTheme.vitalsFlatline;
+      default:
+        return RetroTerminalTheme.vitalsFlatline;
     }
   }
 
@@ -161,6 +169,8 @@ class _VitalsPulseIndicatorState extends State<VitalsPulseIndicator>
       case PingStatus.poor:
         return RetroTerminalTheme.vitalsCritical;
       case PingStatus.timeout:
+        return RetroTerminalTheme.vitalsFlatline;
+      default:
         return RetroTerminalTheme.vitalsFlatline;
     }
   }

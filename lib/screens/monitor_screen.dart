@@ -5,7 +5,7 @@ import '../models/ping_result.dart';
 import '../models/settings.dart';
 import '../services/ping_service.dart';
 import '../services/storage_service.dart';
-import '../theme/retro_terminal_theme.dart' hide PingStatus;
+import '../theme/retro_terminal_theme.dart';
 
 import '../widgets/ping_history_chart.dart';
 

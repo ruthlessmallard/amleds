@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:amleds/models/ping_result.dart';
 
 /// Retro IBM Terminal Theme
 /// Amber phosphor on dark grey background with medical vitals styling
@@ -18,16 +17,18 @@ class RetroTerminalTheme {
   static const Color vitalsCritical = Color(0xFFff3333);  // Red - critical
   static const Color vitalsFlatline = Color(0xFF666666);  // Grey - flatline/no data
   
-  // Status colors mapped to vitals
-  static Color getVitalsColor(PingStatus status) {
-    switch (status) {
-      case PingStatus.excellent:
+  // Status colors mapped to vitals - use int codes: 0=excellent, 1=fair, 2=poor, 3=timeout
+  static Color getVitalsColor(int statusCode) {
+    switch (statusCode) {
+      case 0:
         return vitalsStable;
-      case PingStatus.fair:
+      case 1:
         return vitalsCaution;
-      case PingStatus.poor:
+      case 2:
         return vitalsCritical;
-      case PingStatus.timeout:
+      case 3:
+        return vitalsFlatline;
+      default:
         return vitalsFlatline;
     }
   }
