@@ -1,6 +1,6 @@
 # AMLEDS (Autonomous Machine Latency Evaluation & Diagnostic System)
 
-A network diagnostic tool for monitoring autonomous machines with static IPs on Android. Formerly known as CatTriage.
+A network diagnostic tool for monitoring autonomous machines with static IPs on Android.
 
 ## Features
 
