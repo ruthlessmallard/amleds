@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/ping_result.dart';
-import '../theme/retro_terminal_theme.dart';
+import '../theme/retro_terminal_theme.dart' hide PingStatus;
 
 /// Vitals monitor style history chart
 class PingHistoryChart extends StatelessWidget {
@@ -122,6 +122,8 @@ class PingHistoryChart extends StatelessWidget {
       case PingStatus.poor:
         return RetroTerminalTheme.vitalsCritical;
       case PingStatus.timeout:
+        return RetroTerminalTheme.vitalsFlatline;
+      default:
         return RetroTerminalTheme.vitalsFlatline;
     }
   }
