@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:dart_ping/dart_ping.dart';
-import 'package:dart_ping_ios/dart_ping_ios.dart';
 import '../models/ping_result.dart';
 import '../models/settings.dart';
 
@@ -10,9 +9,7 @@ class PingService {
   final Map<String, StreamController<PingResult>> _controllers = {};
   final Map<String, List<PingResult>> _history = {};
 
-  PingService({required this.settings}) {
-    DartPingIOS.register();
-  }
+  PingService({required this.settings});
 
   Stream<PingResult> startMonitoring(String ipAddress) {
     if (_controllers.containsKey(ipAddress)) {
