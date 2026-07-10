@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/ping_result.dart';
-import '../theme/retro_terminal_theme.dart';
+import '../theme/retro_terminal_theme.dart' hide PingStatus;
 
 /// Vitals-style status indicator for ping results
 class StatusIndicator extends StatelessWidget {
