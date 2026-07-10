@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:amleds/models/ping_result.dart';
 
 /// Retro IBM Terminal Theme
 /// Amber phosphor on dark grey background with medical vitals styling
@@ -240,13 +241,7 @@ class RetroTerminalTheme {
   );
 }
 
-// Ping status enum for theme reference
-enum PingStatus {
-  excellent,
-  fair,
-  poor,
-  timeout,
-}
+
 
 /// CRT Scanline overlay widget
 class CRTScanlines extends StatelessWidget {

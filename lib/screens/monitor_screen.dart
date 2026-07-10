@@ -6,7 +6,7 @@ import '../models/settings.dart';
 import '../services/ping_service.dart';
 import '../services/storage_service.dart';
 import '../theme/retro_terminal_theme.dart';
-import '../widgets/status_indicator.dart';
+
 import '../widgets/ping_history_chart.dart';
 
 class MonitorScreen extends StatefulWidget {
@@ -596,6 +596,8 @@ class _MonitorScreenState extends State<MonitorScreen> {
       case PingStatus.timeout:
       case null:
         return RetroTerminalTheme.vitalsFlatline;
+      default:
+        return RetroTerminalTheme.vitalsFlatline;
     }
   }
 
@@ -609,6 +611,8 @@ class _MonitorScreenState extends State<MonitorScreen> {
         return 'CRITICAL';
       case PingStatus.timeout:
         return 'FLATLINE';
+      default:
+        return 'UNKNOWN';
     }
   }
 
