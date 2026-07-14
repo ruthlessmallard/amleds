@@ -5,8 +5,8 @@ class AppSettings {
   int maxHistorySize;
 
   AppSettings({
-    this.excellentThreshold = 50,
-    this.fairThreshold = 200,
+    this.excellentThreshold = 30,  // < 30ms = excellent (green)
+    this.fairThreshold = 50,       // < 50ms = caution (yellow), >= 50ms = critical (red)
     this.pingIntervalMs = 1000,
     this.maxHistorySize = 10,
   });
@@ -22,8 +22,8 @@ class AppSettings {
 
   factory AppSettings.fromJson(Map<String, dynamic> json) {
     return AppSettings(
-      excellentThreshold: json['excellentThreshold'] as int? ?? 50,
-      fairThreshold: json['fairThreshold'] as int? ?? 200,
+      excellentThreshold: json['excellentThreshold'] as int? ?? 30,
+      fairThreshold: json['fairThreshold'] as int? ?? 50,
       pingIntervalMs: json['pingIntervalMs'] as int? ?? 1000,
       maxHistorySize: json['maxHistorySize'] as int? ?? 10,
     );

@@ -17,8 +17,8 @@ class _SplashScreenState extends State<SplashScreen>
   final String _sillyWarnings = '''
 PHARMACEUTICAL-STYLE DISCLAIMER:
 
-May cause drowsiness, disinterest, desire to disappear and hike the Appalachian 
-Trail, and some possible autonomous machine monitoring. 
+May cause drowsiness, disinterest, desire to disappear and hike the
+Appalachian Trail, and some possible autonomous machine monitoring. 
 
 Do not operate heavy machinery while using this lightweight machinery. 
 

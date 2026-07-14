@@ -180,7 +180,7 @@ class _MachineEditScreenState extends State<MachineEditScreen> {
                 controller: _nameController,
                 style: RetroTerminalTheme.terminalText,
                 decoration: InputDecoration(
-                  hintText: 'e.g., SERVER RACK 1',
+                  hintText: 'E.G. EQUIPMENT NUMBER',
                   hintStyle: RetroTerminalTheme.terminalText.copyWith(
                     color: RetroTerminalTheme.amberDim.withOpacity(0.5),
                   ),
