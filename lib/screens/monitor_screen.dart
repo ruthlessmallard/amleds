@@ -561,18 +561,11 @@ class _MonitorScreenState extends State<MonitorScreen> {
                             ),
                           ),
                           Text(
-                            '${_calculatePeak(history)}',
+                            _getPeakDisplay(history),
                             style: RetroTerminalTheme.terminalText.copyWith(
                               fontFamily: 'monospace',
                               fontSize: 12,
                               color: _getPeakColor(history),
-                            ),
-                          ),
-                          Text(
-                            ' ms',
-                            style: RetroTerminalTheme.terminalText.copyWith(
-                              fontSize: 9,
-                              color: RetroTerminalTheme.amberDim,
                             ),
                           ),
                         ],
@@ -669,14 +662,21 @@ class _MonitorScreenState extends State<MonitorScreen> {
     return (sum / valid.length).round();
   }
 
-  int _calculatePeak(List<PingResult> history) {
+  int? _calculatePeak(List<PingResult> history) {
     final valid = history.where((r) => r.responseTimeMs != null).toList();
-    if (valid.isEmpty) return 0;
+    if (valid.isEmpty) return null; // All timeouts = flatline
     return valid.map((r) => r.responseTimeMs!).reduce((a, b) => a > b ? a : b);
+  }
+
+  String _getPeakDisplay(List<PingResult> history) {
+    final peak = _calculatePeak(history);
+    if (peak == null) return 'OL'; // Overload/flatline like a DMM
+    return '$peak ms';
   }
 
   Color _getPeakColor(List<PingResult> history) {
     final peak = _calculatePeak(history);
+    if (peak == null) return RetroTerminalTheme.vitalsFlatline;
     if (peak > _settings.fairThreshold) return RetroTerminalTheme.vitalsCritical;
     if (peak > _settings.excellentThreshold) return RetroTerminalTheme.vitalsCaution;
     return RetroTerminalTheme.vitalsStable;
