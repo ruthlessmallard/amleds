@@ -14,20 +14,11 @@ class _SplashScreenState extends State<SplashScreen>
   late AnimationController _controller;
   late Animation<double> _scrollAnimation;
 
-  final String _disclaimerText = '''
-AMLEDS v1.0.0 - AUTONOMOUS MACHINE LATENCY EVALUATION & DIAGNOSTIC SYSTEM
-================================================================================
-
+  final String _sillyWarnings = '''
 PHARMACEUTICAL-STYLE DISCLAIMER:
 
 May cause drowsiness, disinterest, desire to disappear and hike the Appalachian 
-Trail, and possible autonomous machine monitoring. 
-
-Not for final diagnostics. Not liable for monetary decision making. 
-
-Do not approach any live autonomous equipment. 
-
-Maker not liable for harm, physical, mental, or monetary in nature. 
+Trail, and some possible autonomous machine monitoring. 
 
 Do not operate heavy machinery while using this lightweight machinery. 
 
@@ -36,15 +27,7 @@ If ping times last longer than 4 hours, consult a network administrator.
 Results, patience, and device temperature may vary. 
 
 Prolonged use in low-light environments may cause eye strain, existential dread, 
-and spontaneous career reassessment.
-
-================================================================================
-INITIALIZING SYSTEM...
-LOADING DIAGNOSTIC MODULES...
-ESTABLISHING NETWORK PROTOCOLS...
-
-[PRESS ANY KEY TO CONTINUE]
-''';
+and spontaneous career reassessment.''';
 
   @override
   void initState() {
@@ -128,9 +111,37 @@ ESTABLISHING NETWORK PROTOCOLS...
                             _buildHeader(),
                             const SizedBox(height: 24),
                             
-                            // Disclaimer text
+                            // Header
+                            const Text(
+                              'AMLEDS v1.0.0',
+                              style: TextStyle(
+                                color: Color(0xFFffb000),
+                                fontFamily: 'monospace',
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            const Text(
+                              'AUTONOMOUS MACHINE LATENCY EVALUATION & DIAGNOSTIC SYSTEM',
+                              style: TextStyle(
+                                color: Color(0xFFcc8c00),
+                                fontFamily: 'monospace',
+                                fontSize: 11,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            Container(
+                              height: 2,
+                              color: const Color(0xFF1a1a1a),
+                            ),
+                            const SizedBox(height: 16),
+                            
+                            // Silly warnings (main text)
                             Text(
-                              _disclaimerText,
+                              _sillyWarnings,
                               style: const TextStyle(
                                 color: Color(0xFFffb000),
                                 fontFamily: 'monospace',
@@ -140,7 +151,66 @@ ESTABLISHING NETWORK PROTOCOLS...
                               ),
                             ),
                             
+                            const SizedBox(height: 24),
+                            Container(
+                              height: 2,
+                              color: const Color(0xFF1a1a1a),
+                            ),
+                            const SizedBox(height: 16),
+                            
+                            // Serious warnings (smaller text)
+                            const Text(
+                              'NOT FOR FINAL DIAGNOSTICS. NOT LIABLE FOR MONETARY DECISION MAKING.\n'
+                              'DO NOT APPROACH LIVE AUTONOMOUS EQUIPMENT.\n'
+                              'MAKER NOT LIABLE FOR HARM, PHYSICAL, MENTAL, OR MONETARY IN NATURE.',
+                              style: TextStyle(
+                                color: Color(0xFFcc8c00),
+                                fontFamily: 'monospace',
+                                fontSize: 10,
+                                height: 1.5,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                            
                             const SizedBox(height: 32),
+                            const Text(
+                              'INITIALIZING SYSTEM...\n'
+                              'LOADING DIAGNOSTIC MODULES...\n'
+                              'ESTABLISHING NETWORK PROTOCOLS...',
+                              style: TextStyle(
+                                color: Color(0xFFffb000),
+                                fontFamily: 'monospace',
+                                fontSize: 12,
+                                height: 1.5,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                            
+                            const SizedBox(height: 48),
+                            const Text(
+                              '[PRESS ANY KEY TO CONTINUE]',
+                              style: TextStyle(
+                                color: Color(0xFFffb000),
+                                fontFamily: 'monospace',
+                                fontSize: 12,
+                                letterSpacing: 2,
+                              ),
+                            ),
+                            
+                            const SizedBox(height: 64),
+                            const Center(
+                              child: Text(
+                                '© Shawn Baird 2026',
+                                style: TextStyle(
+                                  color: Color(0xFF666666),
+                                  fontFamily: 'monospace',
+                                  fontSize: 10,
+                                  letterSpacing: 1,
+                                ),
+                              ),
+                            ),
+                            
+                            const SizedBox(height: 16),
                             
                             // Blinking cursor at end
                             _buildBlinkingCursor(),

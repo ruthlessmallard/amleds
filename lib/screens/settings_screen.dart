@@ -282,7 +282,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           child: OutlinedButton.icon(
                             onPressed: _resetToDefaults,
                             icon: const Icon(Icons.restore, size: 18),
-                            label: const Text('RESET DEFAULTS'),
+                            label: const Text(
+                              'RESET',
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         ),
                         const SizedBox(width: 16),
@@ -303,7 +306,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     )
                                   : const Icon(Icons.save, size: 18),
                               label: Text(
-                                _isSaving ? 'SAVING...' : 'SAVE CONFIGURATION',
+                                _isSaving ? 'SAVING...' : 'SAVE',
+                                overflow: TextOverflow.ellipsis,
                                 style: RetroTerminalTheme.terminalText.copyWith(
                                   color: RetroTerminalTheme.backgroundColor,
                                   fontWeight: FontWeight.bold,
