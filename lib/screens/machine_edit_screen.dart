@@ -338,18 +338,20 @@ class _MachineEditScreenState extends State<MachineEditScreen> {
               Row(
                 children: [
                   Expanded(
+                    flex: 3,
                     child: OutlinedButton.icon(
                       onPressed: () => Navigator.pop(context),
                       icon: const Icon(Icons.close, size: 18),
                       label: const Text(
                         'CANCEL',
                         overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
                       ),
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  const SizedBox(width: 12),
                   Expanded(
-                    flex: 2,
+                    flex: 5,
                     child: SizedBox(
                       height: 48,
                       child: ElevatedButton.icon(
@@ -365,8 +367,9 @@ class _MachineEditScreenState extends State<MachineEditScreen> {
                               )
                             : const Icon(Icons.save, size: 18),
                         label: Text(
-                          _isSaving ? 'SAVING...' : 'SAVE',
+                          _isSaving ? 'SAVING...' : 'SAVE MACHINE',
                           overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
                           style: RetroTerminalTheme.terminalText.copyWith(
                             color: RetroTerminalTheme.backgroundColor,
                             fontWeight: FontWeight.bold,

@@ -279,18 +279,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     Row(
                       children: [
                         Expanded(
+                          flex: 3,
                           child: OutlinedButton.icon(
                             onPressed: _resetToDefaults,
                             icon: const Icon(Icons.restore, size: 18),
                             label: const Text(
                               'RESET',
                               overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
                             ),
                           ),
                         ),
-                        const SizedBox(width: 16),
+                        const SizedBox(width: 12),
                         Expanded(
-                          flex: 2,
+                          flex: 5,
                           child: SizedBox(
                             height: 48,
                             child: ElevatedButton.icon(
@@ -306,8 +308,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     )
                                   : const Icon(Icons.save, size: 18),
                               label: Text(
-                                _isSaving ? 'SAVING...' : 'SAVE',
+                                _isSaving ? 'SAVING...' : 'SAVE SETTINGS',
                                 overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
                                 style: RetroTerminalTheme.terminalText.copyWith(
                                   color: RetroTerminalTheme.backgroundColor,
                                   fontWeight: FontWeight.bold,

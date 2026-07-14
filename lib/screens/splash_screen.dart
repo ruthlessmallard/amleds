@@ -107,10 +107,6 @@ and spontaneous career reassessment.''';
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Header with blinking cursor
-                            _buildHeader(),
-                            const SizedBox(height: 24),
-                            
                             // Header
                             const Text(
                               'AMLEDS v1.0.0',
@@ -197,7 +193,7 @@ and spontaneous career reassessment.''';
                               ),
                             ),
                             
-                            const SizedBox(height: 64),
+                            const SizedBox(height: 48),
                             const Center(
                               child: Text(
                                 '© Shawn Baird 2026',
@@ -210,7 +206,7 @@ and spontaneous career reassessment.''';
                               ),
                             ),
                             
-                            const SizedBox(height: 16),
+                            const SizedBox(height: 80), // Space for bottom prompt
                             
                             // Blinking cursor at end
                             _buildBlinkingCursor(),
@@ -225,7 +221,7 @@ and spontaneous career reassessment.''';
 
             // Bottom prompt
             Positioned(
-              bottom: 24,
+              bottom: 48,
               left: 0,
               right: 0,
               child: Center(
@@ -241,7 +237,7 @@ and spontaneous career reassessment.''';
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: const Text(
-                      '[ TAP SCREEN TO CONTINUE ]',
+                      '[ TAP TO CONTINUE ]',
                       style: TextStyle(
                         color: Color(0xFFffb000),
                         fontFamily: 'monospace',
