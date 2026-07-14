@@ -3,6 +3,8 @@ name: Build AMLEDS APK
 on:
   push:
     branches: [ main ]
+    tags:
+      - 'v*'
   pull_request:
     branches: [ main ]
   workflow_dispatch:
@@ -10,6 +12,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     
     steps:
     - uses: actions/checkout@v4
@@ -27,11 +31,20 @@ jobs:
       run: flutter analyze --no-fatal-infos
     
     - name: Build APK
-      run: flutter build apk --release --verbose 2>&1 | head -200
+      run: flutter build apk --release
     
-    - name: Upload APK
+    - name: Upload APK (Artifacts)
       uses: actions/upload-artifact@v4
       with:
         name: amleds-release-apk
         path: build/app/outputs/flutter-apk/app-release.apk
         retention-days: 30
+    
+    - name: Upload to Release
+      if: startsWith(github.ref, 'refs/tags/v')
+      uses: softprops/action-gh-release@v1
+      with:
+        files: build/app/outputs/flutter-apk/app-release.apk
+        generate_release_notes: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
