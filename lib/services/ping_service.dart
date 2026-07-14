@@ -1,13 +1,44 @@
 import 'dart:async';
-import 'package:dart_ping/dart_ping.dart';
+import 'dart:io';
 import '../models/ping_result.dart';
 import '../models/settings.dart';
 
+/// Shell ping result parser
+class PingParser {
+  // Parse lines like: "64 bytes from 192.168.1.1: icmp_seq=1 ttl=64 time=1.23 ms"
+  // Or: "time=1 ms" (integers)
+  // Or timeout with no matching line
+  static int? parseTime(String output) {
+    final timeRegex = RegExp(r'time=([0-9.]+)\s*ms');
+    final match = timeRegex.firstMatch(output);
+    if (match != null) {
+      try {
+        return (double.parse(match.group(1)!) * 1000).toInt(); // Convert to microseconds if needed, but usually ms
+      } catch (_) {
+        return null;
+      }
+    }
+    return null;
+  }
+
+  static bool isUnreachable(String output) {
+    return output.toLowerCase().contains('unreachable') ||
+           output.toLowerCase().contains('timed out') ||
+           output.toLowerCase().contains('100% packet loss') ||
+           output.toLowerCase().contains('0 received');
+  }
+
+  static bool isSuccess(String output) {
+    return output.toLowerCase().contains('bytes from');
+  }
+}
+
 class PingService {
   final AppSettings settings;
-  final Map<String, Ping> _activePings = {};
+  final Map<String, Process> _activePings = {};
   final Map<String, StreamController<PingResult>> _controllers = {};
   final Map<String, List<PingResult>> _history = {};
+  final Map<String, bool> _stopFlags = {};
 
   PingService({required this.settings});
 
@@ -26,36 +57,58 @@ class PingService {
   }
 
   void _startPing(String ipAddress, StreamController<PingResult> controller) async {
-    while (!controller.isClosed) {
+    _stopFlags[ipAddress] = false;
+    
+    while (!controller.isClosed && !_stopFlags[ipAddress]!) {
       try {
-        final ping = Ping(ipAddress, count: 1, timeout: 5);
-        _activePings[ipAddress] = ping;
+        // Use system ping binary - works without root on most Android
+        // -c 1 = 1 packet
+        // -W 5 = 5 second timeout  
+        // -n = no DNS lookup (faster)
+        final process = await Process.start(
+          '/system/bin/ping',
+          ['-c', '1', '-W', '5', '-n', ipAddress],
+        );
+        _activePings[ipAddress] = process;
 
-        await for (final event in ping.stream) {
-          PingResult result;
+        // Collect all output
+        final output = await process.stdout.transform(const SystemEncoding().decoder).join();
+        final error = await process.stderr.transform(const SystemEncoding().decoder).join();
+        final exitCode = await process.exitCode;
 
-          if (event.response != null) {
-            final time = event.response!.time?.inMilliseconds;
-            result = PingResult.fromResponse(ipAddress, time);
-          } else if (event.error != null) {
-            result = PingResult.error(ipAddress, event.error.toString());
-          } else {
-            result = PingResult.timeout(ipAddress);
-          }
-
-          _addToHistory(ipAddress, result);
-          if (!controller.isClosed) {
-            controller.add(result);
-          }
+        PingResult result;
+        
+        if (exitCode == 0 && PingParser.isSuccess(output)) {
+          // Successful ping
+          final timeMs = PingParser.parseTime(output);
+          result = PingResult.fromResponse(ipAddress, timeMs);
+        } else if (PingParser.isUnreachable(output) || PingParser.isUnreachable(error)) {
+          // Host unreachable or timeout
+          result = PingResult.timeout(ipAddress);
+        } else if (error.isNotEmpty) {
+          // Other error
+          result = PingResult.error(ipAddress, error.trim());
+        } else {
+          // Assume timeout
+          result = PingResult.timeout(ipAddress);
         }
-      } catch (e) {
-        final result = PingResult.error(ipAddress, e.toString());
+
         _addToHistory(ipAddress, result);
         if (!controller.isClosed) {
           controller.add(result);
         }
+      } catch (e) {
+        // Process start failed - maybe ping binary not available
+        final result = PingResult.error(ipAddress, 'Ping failed: $e');
+        _addToHistory(ipAddress, result);
+        if (!controller.isClosed) {
+          controller.add(result);
+        }
+      } finally {
+        _activePings.remove(ipAddress);
       }
 
+      // Wait for next ping cycle
       await Future.delayed(Duration(milliseconds: settings.pingIntervalMs));
     }
   }
@@ -75,11 +128,13 @@ class PingService {
   }
 
   void stopMonitoring(String ipAddress) {
-    _activePings[ipAddress]?.stop();
+    _stopFlags[ipAddress] = true;
+    _activePings[ipAddress]?.kill();
     _activePings.remove(ipAddress);
     _controllers[ipAddress]?.close();
     _controllers.remove(ipAddress);
     _history.remove(ipAddress);
+    _stopFlags.remove(ipAddress);
   }
 
   void stopAll() {
