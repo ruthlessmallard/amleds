@@ -133,7 +133,7 @@ and spontaneous career reassessment.''';
                               height: 2,
                               color: const Color(0xFF1a1a1a),
                             ),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: 12),
                             
                             // Silly warnings (main text)
                             Text(
@@ -141,50 +141,46 @@ and spontaneous career reassessment.''';
                               style: const TextStyle(
                                 color: Color(0xFFffb000),
                                 fontFamily: 'monospace',
-                                fontSize: 14,
-                                height: 1.6,
+                                fontSize: 13,
+                                height: 1.5,
                                 letterSpacing: 0.5,
                               ),
                             ),
                             
-                            const SizedBox(height: 24),
+                            const SizedBox(height: 16),
                             Container(
                               height: 2,
                               color: const Color(0xFF1a1a1a),
                             ),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: 12),
                             
                             // Serious warnings (smaller text)
                             const Text(
-                              'NOT FOR FINAL DIAGNOSTICS. NOT LIABLE FOR MONETARY DECISION MAKING.\n'
-                              'DO NOT APPROACH LIVE AUTONOMOUS EQUIPMENT.\n'
-                              'MAKER NOT LIABLE FOR HARM, PHYSICAL, MENTAL, OR MONETARY IN NATURE.',
+                              'NOT FOR FINAL DIAGNOSTICS. NOT LIABLE FOR MONETARY DECISIONS.\n'
+                              'DO NOT APPROACH LIVE AUTONOMOUS EQUIPMENT.',
                               style: TextStyle(
                                 color: Color(0xFFcc8c00),
                                 fontFamily: 'monospace',
                                 fontSize: 10,
-                                height: 1.5,
+                                height: 1.4,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                            
+                            const SizedBox(height: 20),
+                            const Text(
+                              'INITIALIZING...',
+                              style: TextStyle(
+                                color: Color(0xFFffb000),
+                                fontFamily: 'monospace',
+                                fontSize: 12,
                                 letterSpacing: 0.5,
                               ),
                             ),
                             
                             const SizedBox(height: 32),
                             const Text(
-                              'INITIALIZING SYSTEM...\n'
-                              'LOADING DIAGNOSTIC MODULES...\n'
-                              'ESTABLISHING NETWORK PROTOCOLS...',
-                              style: TextStyle(
-                                color: Color(0xFFffb000),
-                                fontFamily: 'monospace',
-                                fontSize: 12,
-                                height: 1.5,
-                                letterSpacing: 0.5,
-                              ),
-                            ),
-                            
-                            const SizedBox(height: 48),
-                            const Text(
-                              '[PRESS ANY KEY TO CONTINUE]',
+                              '[TAP TO CONTINUE]',
                               style: TextStyle(
                                 color: Color(0xFFffb000),
                                 fontFamily: 'monospace',
@@ -193,7 +189,7 @@ and spontaneous career reassessment.''';
                               ),
                             ),
                             
-                            const SizedBox(height: 48),
+                            const SizedBox(height: 24),
                             const Center(
                               child: Text(
                                 '© Shawn Baird 2026',
@@ -206,7 +202,7 @@ and spontaneous career reassessment.''';
                               ),
                             ),
                             
-                            const SizedBox(height: 80), // Space for bottom prompt
+                            const SizedBox(height: 120), // Space for bottom prompt
                             
                             // Blinking cursor at end
                             _buildBlinkingCursor(),
