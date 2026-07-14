@@ -13,7 +13,7 @@ class PingParser {
     final match = timeRegex.firstMatch(output);
     if (match != null) {
       try {
-        return (double.parse(match.group(1)!) * 1000).toInt(); // Convert to microseconds if needed, but usually ms
+        return double.parse(match.group(1)!).toInt(); // Ping outputs time in ms already
       } catch (_) {
         return null;
       }
