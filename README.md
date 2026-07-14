@@ -1,158 +1,87 @@
-# AMLEDS (Autonomous Machine Latency Evaluation & Diagnostic System)
+# AMLEDS
 
-A network diagnostic tool for monitoring autonomous machines with static IPs on Android.
+**Autonomous Machine Latency Evaluation & Diagnostic System**
 
-## Features
+A network diagnostic tool for monitoring autonomous equipment with static IPs on Android. Built for field troubleshooting when you need a quick health check without lugging a laptop.
 
-- **Machine Profiles**: Create and manage machine profiles with multiple IP addresses per machine
-- **Real-time Monitoring**: Continuous ping monitoring with 1-second intervals
-- **Visual Status Indicators**: 
-  - 🟢 Green: Excellent (< 50ms)
-  - 🟡 Yellow: Fair (50-200ms)
-  - 🟠 Orange: Poor (> 200ms)
-  - 🔴 Red: Timeout/no response
-- **Rolling History**: Display last 10 readings per IP address (configurable)
-- **Customizable Thresholds**: Adjust latency thresholds in settings
-- **No Audio Alerts**: Visual-only status updates
+Think `mtr` or `ping` with a vintage terminal aesthetic and battery-friendly operation.
 
-## Screenshots
+---
 
-The app includes:
-- Main screen with list of saved machines
-- Add/Edit machine screen for managing machine profiles
-- Monitor screen with real-time ping status and history charts
-- Settings screen for configuring thresholds
+## What It Does
 
-## Prerequisites
+- **Ping monitoring** to multiple static IP endpoints simultaneously
+- **Real-time vitals display** — current, average, and peak (with OL flatline indication like a DMM)
+- **Rolling history chart** — last N readings with color-coded status
+- **Machine profiles** — save equipment by name with multiple IPs (primary, backup, gateway, etc.)
+- **Works offline** — no cloud, no accounts, no telemetry
 
-- [Flutter SDK](https://flutter.dev/docs/get-started/install) (3.0.0 or higher)
-- [Android Studio](https://developer.android.com/studio) or [VS Code](https://code.visualstudio.com/) with Flutter extension
-- Android SDK (API level 21 or higher)
+Built for isolated industrial networks (Caterpillar, etc.) where equipment has static addresses and you need quick triage.
 
-## Setup Instructions
+---
 
-### 1. Clone or Extract the Project
+## Status Colors
+
+| Color | Meaning | Threshold |
+|-------|---------|-----------|
+| 🟢 Green | Excellent | < 30ms |
+| 🟡 Yellow | Caution | 30–50ms |
+| 🔴 Red | Critical / Flatline | ≥ 50ms or timeout |
+
+---
+
+## Screens
+
+- **Machine List** — saved equipment, tap to monitor
+- **Vitals Monitor** — real-time ping display with history charts
+- **Add/Edit Machine** — name, equipment number, IP addresses
+- **Settings** — thresholds, ping interval, history size
+
+---
+
+## Build
+
+Prerequisites: Flutter SDK 3.0+, Android SDK API 21+
 
 ```bash
 cd amleds
-```
-
-### 2. Install Dependencies
-
-```bash
 flutter pub get
-```
-
-### 3. Configure Android (if needed)
-
-The project includes Android configuration files. If you need to update the Flutter SDK path:
-
-Create or edit `android/local.properties`:
-```properties
-flutter.sdk=/path/to/your/flutter/sdk
-```
-
-### 4. Build the APK
-
-For a debug build:
-```bash
-flutter build apk --debug
-```
-
-For a release build:
-```bash
 flutter build apk --release
 ```
 
-The APK will be located at:
-- Debug: `build/app/outputs/flutter-apk/app-debug.apk`
-- Release: `build/app/outputs/flutter-apk/app-release.apk`
-
-### 5. Install on Device
-
-```bash
-flutter install
-```
-
-Or manually install the APK:
+Install:
 ```bash
 adb install build/app/outputs/flutter-apk/app-release.apk
 ```
 
-## Usage
+---
 
-1. **Add a Machine**: Tap the "Add Machine" button on the main screen
-2. **Configure Machine**: Enter a name and add one or more IP addresses
-3. **Monitor**: Tap on a machine to start monitoring
-4. **View Status**: Watch real-time ping results with color-coded status
-5. **Adjust Settings**: Use the settings icon to customize thresholds
+## Technical Notes
 
-## Project Structure
+- Uses system `/system/bin/ping` binary for reliable ICMP (no root required)
+- Stores data locally in JSON (no cloud)
+- Retro terminal theme — amber phosphor on dark grey, scanlines optional
 
-```
-amleds/
-├── lib/
-│   ├── main.dart                      # App entry point
-│   ├── models/
-│   │   ├── machine.dart               # Machine data model
-│   │   ├── ping_result.dart           # Ping result data model
-│   │   └── settings.dart              # App settings model
-│   ├── services/
-│   │   ├── storage_service.dart       # JSON persistence
-│   │   └── ping_service.dart          # Ping implementation
-│   ├── screens/
-│   │   ├── machine_list_screen.dart   # Main machine list
-│   │   ├── machine_edit_screen.dart   # Add/Edit machine
-│   │   ├── monitor_screen.dart        # Real-time monitoring
-│   │   └── settings_screen.dart       # Threshold configuration
-│   └── widgets/
-│       ├── status_indicator.dart      # Status UI components
-│       └── ping_history_chart.dart    # History visualization
-├── android/                           # Android configuration
-├── pubspec.yaml                       # Dependencies
-└── README.md                          # This file
-```
+---
 
-## Dependencies
+## Copyright
 
-- `dart_ping`: ^9.0.1 - ICMP ping functionality
-- `dart_ping_ios`: ^4.0.0 - iOS ping support (included for compatibility)
-- `shared_preferences`: ^2.2.2 - Settings storage
-- `path_provider`: ^2.1.1 - File system access
-
-## Permissions
-
-The app requires the following Android permissions:
-- `INTERNET` - For sending ping requests
-- `ACCESS_NETWORK_STATE` - For network state monitoring
-
-## Troubleshooting
-
-### Build Issues
-
-1. **Flutter SDK not found**: Ensure `flutter` is in your PATH or set `flutter.sdk` in `android/local.properties`
-
-2. **Gradle sync issues**: Try:
-   ```bash
-   cd android
-   ./gradlew clean
-   cd ..
-   flutter clean
-   flutter pub get
-   ```
-
-3. **Dependency conflicts**: Run `flutter pub upgrade` to update dependencies
-
-### Runtime Issues
-
-1. **Ping not working**: Some Android devices may require root access for ICMP pings. The app uses the `dart_ping` package which handles most cases.
-
-2. **No network access**: Ensure the app has internet permission and the device is connected to a network.
+© 2026 Shawn Baird
 
 ## License
 
-This project is provided as-is for network diagnostic purposes.
+This work is licensed under the **Creative Commons Attribution-NonCommercial 4.0 International License**.
 
-## Contributing
+You are free to:
+- **Share** — copy and redistribute the material in any medium or format
+- **Adapt** — remix, transform, and build upon the material
 
-Feel free to fork and modify for your specific needs.
+Under the following terms:
+- **Attribution** — You must give appropriate credit
+- **NonCommercial** — You may not use the material for commercial purposes
+
+Full license text: https://creativecommons.org/licenses/by-nc/4.0/
+
+---
+
+*AMLEDS — field diagnostics for heavy machinery. Use at your own risk. Not a replacement for proper network analysis tools.*
