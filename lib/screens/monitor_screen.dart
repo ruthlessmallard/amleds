@@ -663,20 +663,25 @@ class _MonitorScreenState extends State<MonitorScreen> {
   }
 
   int? _calculatePeak(List<PingResult> history) {
+    // Check if any timeout exists - that's the "worst" peak
+    final hasTimeout = history.any((r) => r.responseTimeMs == null);
+    if (hasTimeout) return null; // Timeout is OL/overload
+    
+    // Otherwise find highest valid ping
     final valid = history.where((r) => r.responseTimeMs != null).toList();
-    if (valid.isEmpty) return null; // All timeouts = flatline
+    if (valid.isEmpty) return null; // Empty history
     return valid.map((r) => r.responseTimeMs!).reduce((a, b) => a > b ? a : b);
   }
 
   String _getPeakDisplay(List<PingResult> history) {
     final peak = _calculatePeak(history);
-    if (peak == null) return 'OL'; // Overload/flatline like a DMM
+    if (peak == null) return 'OL'; // Timeout = overload/flatline like a DMM
     return '$peak ms';
   }
 
   Color _getPeakColor(List<PingResult> history) {
     final peak = _calculatePeak(history);
-    if (peak == null) return RetroTerminalTheme.vitalsFlatline;
+    if (peak == null) return RetroTerminalTheme.vitalsFlatline; // Timeout
     if (peak > _settings.fairThreshold) return RetroTerminalTheme.vitalsCritical;
     if (peak > _settings.excellentThreshold) return RetroTerminalTheme.vitalsCaution;
     return RetroTerminalTheme.vitalsStable;
