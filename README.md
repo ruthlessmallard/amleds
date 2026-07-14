@@ -16,7 +16,7 @@ Think `mtr` or `ping` with a vintage terminal aesthetic and battery-friendly ope
 - **Machine profiles** — save equipment by name with multiple IPs (primary, backup, gateway, etc.)
 - **Works offline** — no cloud, no accounts, no telemetry
 
-Built for isolated industrial networks (Caterpillar, etc.) where equipment has static addresses and you need quick triage.
+Built for isolated industrial networks  where equipment has static addresses and you need quick triage.
 
 ---
 
