@@ -515,25 +515,67 @@ class _MonitorScreenState extends State<MonitorScreen> {
                   ),
                 ),
                 
-                // Timestamp
+                // Rolling stats
                 if (result != null)
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text(
-                        'LAST UPDATE',
-                        style: RetroTerminalTheme.terminalText.copyWith(
-                          fontSize: 9,
-                          color: RetroTerminalTheme.amberDim,
-                        ),
+                      // AVG
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'AVG ',
+                            style: RetroTerminalTheme.terminalText.copyWith(
+                              fontSize: 9,
+                              color: RetroTerminalTheme.amberDim,
+                            ),
+                          ),
+                          Text(
+                            '${_calculateAverage(history)}',
+                            style: RetroTerminalTheme.terminalText.copyWith(
+                              fontFamily: 'monospace',
+                              fontSize: 12,
+                              color: RetroTerminalTheme.amberColor,
+                            ),
+                          ),
+                          Text(
+                            ' ms',
+                            style: RetroTerminalTheme.terminalText.copyWith(
+                              fontSize: 9,
+                              color: RetroTerminalTheme.amberDim,
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 4),
-                      Text(
-                        _formatTime(result.timestamp),
-                        style: RetroTerminalTheme.terminalText.copyWith(
-                          fontFamily: 'monospace',
-                          fontSize: 12,
-                        ),
+                      // PEAK
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'PEAK ',
+                            style: RetroTerminalTheme.terminalText.copyWith(
+                              fontSize: 9,
+                              color: RetroTerminalTheme.amberDim,
+                            ),
+                          ),
+                          Text(
+                            '${_calculatePeak(history)}',
+                            style: RetroTerminalTheme.terminalText.copyWith(
+                              fontFamily: 'monospace',
+                              fontSize: 12,
+                              color: _getPeakColor(history),
+                            ),
+                          ),
+                          Text(
+                            ' ms',
+                            style: RetroTerminalTheme.terminalText.copyWith(
+                              fontSize: 9,
+                              color: RetroTerminalTheme.amberDim,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -618,5 +660,25 @@ class _MonitorScreenState extends State<MonitorScreen> {
 
   String _formatTime(DateTime time) {
     return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}:${time.second.toString().padLeft(2, '0')}';
+  }
+
+  int _calculateAverage(List<PingResult> history) {
+    final valid = history.where((r) => r.responseTimeMs != null).toList();
+    if (valid.isEmpty) return 0;
+    final sum = valid.fold<int>(0, (a, b) => a + b.responseTimeMs!);
+    return (sum / valid.length).round();
+  }
+
+  int _calculatePeak(List<PingResult> history) {
+    final valid = history.where((r) => r.responseTimeMs != null).toList();
+    if (valid.isEmpty) return 0;
+    return valid.map((r) => r.responseTimeMs!).reduce((a, b) => a > b ? a : b);
+  }
+
+  Color _getPeakColor(List<PingResult> history) {
+    final peak = _calculatePeak(history);
+    if (peak > _settings.fairThreshold) return RetroTerminalTheme.vitalsCritical;
+    if (peak > _settings.excellentThreshold) return RetroTerminalTheme.vitalsCaution;
+    return RetroTerminalTheme.vitalsStable;
   }
 }
