@@ -8,6 +8,7 @@ import '../services/storage_service.dart';
 import '../theme/retro_terminal_theme.dart';
 
 import '../widgets/ping_history_chart.dart';
+import '../widgets/aggregated_endpoint_chart.dart';
 
 class MonitorScreen extends StatefulWidget {
   final Machine machine;
@@ -157,14 +158,20 @@ class _MonitorScreenState extends State<MonitorScreen> {
       body: CRTScanlines(
         child: Column(
           children: [
-            // Vitals Monitor Header
-            _buildVitalsHeader(),
+            // Aggregated Endpoints Chart Header
+            _buildAggregatedHeader(),
             
-            // Status Summary - Vitals Style
-            _buildVitalsSummary(),
+            // All Endpoints Chart
+            AggregatedEndpointChart(
+              allHistory: _history,
+              height: 140,
+            ),
             
-            // Legend
-            _buildLegend(),
+            // Chart Legend
+            AggregatedChartLegend(
+              allHistory: _history,
+              latestResults: _latestResults,
+            ),
 
             // IP Status List - Vitals Monitor Cards
             Expanded(
@@ -179,6 +186,45 @@ class _MonitorScreenState extends State<MonitorScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildAggregatedHeader() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: RetroTerminalTheme.surfaceColor,
+        border: Border(
+          bottom: BorderSide(
+            color: RetroTerminalTheme.amberDim,
+            width: 1,
+          ),
+        ),
+      ),
+      child: Row(
+        children: [
+          const Icon(
+            Icons.timeline,
+            color: RetroTerminalTheme.amberColor,
+            size: 20,
+          ),
+          const SizedBox(width: 8),
+          Text(
+            'AGGREGATED ENDPOINTS',
+            style: RetroTerminalTheme.terminalHeader.copyWith(
+              letterSpacing: 2,
+            ),
+          ),
+          const Spacer(),
+          Text(
+            '${widget.machine.ipAddresses.length} ENDPOINTS ACTIVE',
+            style: RetroTerminalTheme.terminalText.copyWith(
+              fontSize: 11,
+              color: RetroTerminalTheme.amberDim,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -222,7 +268,7 @@ class _MonitorScreenState extends State<MonitorScreen> {
     );
   }
 
-  Widget _buildVitalsSummary() {
+  Widget _buildVitalsSummary_DEPRECATED() {
     final total = widget.machine.ipAddresses.length;
     final stable = _latestResults.values
         .where((r) => r.status == PingStatus.excellent)
@@ -305,7 +351,7 @@ class _MonitorScreenState extends State<MonitorScreen> {
     );
   }
 
-  Widget _buildLegend() {
+  Widget _buildLegend_DEPRECATED() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Wrap(
