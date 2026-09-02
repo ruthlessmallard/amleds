@@ -288,8 +288,6 @@ class AggregatedChartLegend extends StatelessWidget {
   Widget build(BuildContext context) {
     if (allHistory.isEmpty) return const SizedBox.shrink();
 
-    // Generate same colors as chart
-    final endpointColors = _generateEndpointColors();
     final endpoints = allHistory.keys.toList();
     
     // Calculate screen width for full-width cards
@@ -311,7 +309,7 @@ class AggregatedChartLegend extends StatelessWidget {
           const SizedBox(height: 16),
           // Full-width grid of endpoint cards (2x height)
           ...endpoints.map((endpoint) {
-            final color = endpointColors[endpoint] ?? RetroTerminalTheme.amberColor;
+            final color = _generateEndpointColors()[endpoint] ?? RetroTerminalTheme.amberColor;
             final latestResult = latestResults[endpoint];
             final history = allHistory[endpoint] ?? [];
             final status = _getStatusText(latestResult);
