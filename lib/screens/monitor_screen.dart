@@ -7,7 +7,6 @@ import '../services/ping_service.dart';
 import '../services/storage_service.dart';
 import '../theme/retro_terminal_theme.dart';
 
-import '../widgets/ping_history_chart.dart';
 import '../widgets/aggregated_endpoint_chart.dart';
 
 class MonitorScreen extends StatefulWidget {
@@ -222,83 +221,11 @@ class _MonitorScreenState extends State<MonitorScreen> {
 
   // _buildVitalsSummary() removed - replaced by AggregatedEndpointChart
 
-  Widget _buildVitalStat(String label, int count, int total, Color color) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(4),
-            border: Border.all(
-              color: color.withOpacity(0.5),
-              width: 1,
-            ),
-          ),
-          child: Column(
-            children: [
-              Text(
-                '$count',
-                style: RetroTerminalTheme.terminalHeader.copyWith(
-                  color: color,
-                  fontSize: 20,
-                ),
-              ),
-              Text(
-                '/$total',
-                style: RetroTerminalTheme.terminalText.copyWith(
-                  color: color.withOpacity(0.6),
-                  fontSize: 10,
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 6),
-        Text(
-          label,
-          style: RetroTerminalTheme.terminalText.copyWith(
-            fontSize: 10,
-            color: color,
-            letterSpacing: 1,
-          ),
-        ),
-      ],
-    );
-  }
+  // _buildVitalStat() removed - obsolete vitals method
 
   // _buildLegend() removed - replaced by AggregatedChartLegend
 
-  Widget _buildLegendItem(String label, Color color) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: 8,
-          height: 8,
-          decoration: BoxDecoration(
-            color: color,
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: color.withOpacity(0.4),
-                blurRadius: 4,
-                spreadRadius: 1,
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(width: 6),
-        Text(
-          label,
-          style: RetroTerminalTheme.terminalText.copyWith(
-            fontSize: 10,
-            color: RetroTerminalTheme.amberDim,
-          ),
-        ),
-      ],
-    );
-  }
+  // _buildLegendItem() removed - obsolete vitals method
 
   // _buildVitalsCard() removed - replaced by AggregatedChartLegend
 
