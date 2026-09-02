@@ -7,11 +7,13 @@ import '../theme/retro_terminal_theme.dart';
 class AggregatedEndpointChart extends StatelessWidget {
   final Map<String, List<PingResult>> allHistory;
   final double height;
+  final int criticalThreshold;
 
   const AggregatedEndpointChart({
     super.key,
     required this.allHistory,
     this.height = 120,
+    required this.criticalThreshold,
   });
 
   @override
@@ -53,9 +55,44 @@ class AggregatedEndpointChart extends StatelessWidget {
           width: 1,
         ),
       ),
-      child: CustomPaint(
-        size: Size(double.infinity, height - 32),
-        painter: _AggregatedChartPainter(allHistory),
+      child: Column(
+        children: [
+          // Y-axis label
+          Padding(
+            padding: const EdgeInsets.only(left: 8, bottom: 8),
+            child: Row(
+              children: [
+                RotatedBox(
+                  quarterTurns: 3,
+                  child: Text(
+                    'LATENCY (MS)',
+                    style: RetroTerminalTheme.terminalText.copyWith(
+                      fontSize: 10,
+                      color: RetroTerminalTheme.amberDim,
+                      letterSpacing: 1,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: CustomPaint(
+                    size: Size(double.infinity, height - 60),
+                    painter: _AggregatedChartPainter(allHistory, criticalThreshold),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // X-axis label
+          Text(
+            'TIME →',
+            style: RetroTerminalTheme.terminalText.copyWith(
+              fontSize: 10,
+              color: RetroTerminalTheme.amberDim,
+              letterSpacing: 1,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -63,9 +100,10 @@ class AggregatedEndpointChart extends StatelessWidget {
 
 class _AggregatedChartPainter extends CustomPainter {
   final Map<String, List<PingResult>> allHistory;
+  final int criticalThreshold;
   final Map<String, Color> _endpointColors = {};
 
-  _AggregatedChartPainter(this.allHistory) {
+  _AggregatedChartPainter(this.allHistory, this.criticalThreshold) {
     _generateRandomColors();
   }
 
@@ -171,13 +209,14 @@ class _AggregatedChartPainter extends CustomPainter {
       final result = history[i];
       final x = i * stepX;
       
-      // Calculate Y based on response time (inverted, lower ping = higher on screen)
+      // Calculate Y based on response time, scaled to critical threshold
       double normalizedY;
       if (result.status == PingStatus.timeout || result.responseTimeMs == null) {
         normalizedY = 0.0; // Bottom for timeout/error
       } else {
-        // Normalize to 0-1, with 500ms = bottom, 0ms = top
-        normalizedY = 1.0 - (result.responseTimeMs! / 500).clamp(0.0, 1.0);
+        // Normalize to 0-1, with criticalThreshold = bottom, 0ms = top
+        // Clip values that exceed critical threshold at the top
+        normalizedY = 1.0 - (result.responseTimeMs! / criticalThreshold).clamp(0.0, 1.0);
       }
       
       final y = size.height - (normalizedY * size.height);
@@ -202,7 +241,7 @@ class _AggregatedChartPainter extends CustomPainter {
       if (lastResult.status == PingStatus.timeout || lastResult.responseTimeMs == null) {
         lastNormalizedY = 0.0;
       } else {
-        lastNormalizedY = 1.0 - (lastResult.responseTimeMs! / 500).clamp(0.0, 1.0);
+        lastNormalizedY = 1.0 - (lastResult.responseTimeMs! / criticalThreshold).clamp(0.0, 1.0);
       }
       final lastY = size.height - (lastNormalizedY * size.height);
       
@@ -252,8 +291,12 @@ class AggregatedChartLegend extends StatelessWidget {
     // Generate same colors as chart
     final endpointColors = _generateEndpointColors();
     final endpoints = allHistory.keys.toList();
+    
+    // Calculate screen width for full-width cards
+    final screenWidth = MediaQuery.of(context).size.width;
 
     return Container(
+      width: screenWidth,
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -265,69 +308,162 @@ class AggregatedChartLegend extends StatelessWidget {
               letterSpacing: 1,
             ),
           ),
-          const SizedBox(height: 12),
-          Wrap(
-            spacing: 16,
-            runSpacing: 8,
-            children: endpoints.map((endpoint) {
-              final color = endpointColors[endpoint] ?? RetroTerminalTheme.amberColor;
-              final latestResult = latestResults[endpoint];
-              final status = _getStatusText(latestResult);
-              
-              return Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(4),
-                  border: Border.all(
-                    color: color.withOpacity(0.5),
-                    width: 1,
-                  ),
+          const SizedBox(height: 16),
+          // Full-width grid of endpoint cards (2x height)
+          ...endpoints.map((endpoint) {
+            final color = endpointColors[endpoint] ?? RetroTerminalTheme.amberColor;
+            final latestResult = latestResults[endpoint];
+            final history = allHistory[endpoint] ?? [];
+            final status = _getStatusText(latestResult);
+            final peakTime = _calculatePeak(history);
+            final avgTime = _calculateAverage(history);
+            
+            return Container(
+              width: double.infinity,
+              height: 80, // 2x the original height
+              margin: const EdgeInsets.only(bottom: 12),
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(
+                  color: color.withOpacity(0.7),
+                  width: 2,
                 ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 10,
-                      height: 10,
-                      decoration: BoxDecoration(
-                        color: color,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: color.withOpacity(0.5),
-                            blurRadius: 4,
-                            spreadRadius: 1,
-                          ),
-                        ],
-                      ),
+                boxShadow: [
+                  BoxShadow(
+                    color: color.withOpacity(0.2),
+                    blurRadius: 8,
+                    spreadRadius: 0,
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  // Status indicator
+                  Container(
+                    width: 16,
+                    height: 16,
+                    decoration: BoxDecoration(
+                      color: color,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: color.withOpacity(0.6),
+                          blurRadius: 8,
+                          spreadRadius: 2,
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 8),
-                    Column(
+                  ),
+                  const SizedBox(width: 16),
+                  
+                  // Endpoint info
+                  Expanded(
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        Text(
+                          'ENDPOINT',
+                          style: RetroTerminalTheme.terminalText.copyWith(
+                            fontSize: 9,
+                            color: RetroTerminalTheme.amberDim,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
                         Text(
                           endpoint,
                           style: RetroTerminalTheme.terminalText.copyWith(
-                            fontSize: 10,
+                            fontSize: 14,
                             fontFamily: 'monospace',
-                          ),
-                        ),
-                        Text(
-                          status,
-                          style: RetroTerminalTheme.terminalText.copyWith(
-                            fontSize: 8,
-                            color: color,
+                            letterSpacing: 1,
                           ),
                         ),
                       ],
                     ),
-                  ],
-                ),
-              );
-            }).toList(),
-          ),
+                  ),
+                  
+                  // Current status
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        'CURRENT',
+                        style: RetroTerminalTheme.terminalText.copyWith(
+                          fontSize: 9,
+                          color: RetroTerminalTheme.amberDim,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        status,
+                        style: RetroTerminalTheme.terminalText.copyWith(
+                          fontSize: 12,
+                          color: color,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  
+                  const SizedBox(width: 16),
+                  
+                  // Average time
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        'AVG',
+                        style: RetroTerminalTheme.terminalText.copyWith(
+                          fontSize: 9,
+                          color: RetroTerminalTheme.amberDim,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        '${avgTime}ms',
+                        style: RetroTerminalTheme.terminalText.copyWith(
+                          fontSize: 12,
+                          fontFamily: 'monospace',
+                          color: RetroTerminalTheme.amberColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                  
+                  const SizedBox(width: 16),
+                  
+                  // Peak time
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        'PEAK',
+                        style: RetroTerminalTheme.terminalText.copyWith(
+                          fontSize: 9,
+                          color: RetroTerminalTheme.amberDim,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        _getPeakDisplay(history),
+                        style: RetroTerminalTheme.terminalText.copyWith(
+                          fontSize: 12,
+                          fontFamily: 'monospace',
+                          color: _getPeakColor(history),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
         ],
       ),
     );
@@ -371,6 +507,38 @@ class AggregatedChartLegend extends StatelessWidget {
     if (result == null) return 'INIT';
     if (result.responseTimeMs == null) return 'TIMEOUT';
     return '${result.responseTimeMs}ms';
+  }
+  
+  int _calculateAverage(List<PingResult> history) {
+    final valid = history.where((r) => r.responseTimeMs != null).toList();
+    if (valid.isEmpty) return 0;
+    final sum = valid.fold<int>(0, (a, b) => a + b.responseTimeMs!);
+    return (sum / valid.length).round();
+  }
+
+  int? _calculatePeak(List<PingResult> history) {
+    // Check if any timeout exists - that's the "worst" peak
+    final hasTimeout = history.any((r) => r.responseTimeMs == null);
+    if (hasTimeout) return null; // Timeout is OL/overload
+    
+    // Otherwise find highest valid ping
+    final valid = history.where((r) => r.responseTimeMs != null).toList();
+    if (valid.isEmpty) return null; // Empty history
+    return valid.map((r) => r.responseTimeMs!).reduce((a, b) => a > b ? a : b);
+  }
+
+  String _getPeakDisplay(List<PingResult> history) {
+    final peak = _calculatePeak(history);
+    if (peak == null) return 'OL'; // Timeout = overload/flatline like a DMM
+    return '${peak}ms';
+  }
+
+  Color _getPeakColor(List<PingResult> history) {
+    final peak = _calculatePeak(history);
+    if (peak == null) return RetroTerminalTheme.vitalsFlatline; // Timeout
+    if (peak > 200) return RetroTerminalTheme.vitalsCritical;  // Assume >200ms is critical
+    if (peak > 100) return RetroTerminalTheme.vitalsCaution;   // Assume >100ms is caution
+    return RetroTerminalTheme.vitalsStable;
   }
 }
 
