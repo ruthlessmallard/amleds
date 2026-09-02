@@ -310,7 +310,7 @@ class AggregatedChartLegend extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           // Full-width grid of endpoint cards (2x height)
-          ...endpoints.map((endpoint) =>
+          ...endpoints.map((endpoint) {
             final color = endpointColors[endpoint] ?? RetroTerminalTheme.amberColor;
             final latestResult = latestResults[endpoint];
             final history = allHistory[endpoint] ?? [];
@@ -462,7 +462,7 @@ class AggregatedChartLegend extends StatelessWidget {
                 ],
               ),
             );
-          }),
+          }).toList(),
         ],
       ),
     );
