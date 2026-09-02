@@ -229,82 +229,9 @@ class _MonitorScreenState extends State<MonitorScreen> {
     );
   }
 
-  Widget _buildVitalsHeader() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: RetroTerminalTheme.surfaceColor,
-        border: Border(
-          bottom: BorderSide(
-            color: RetroTerminalTheme.amberDim,
-            width: 1,
-          ),
-        ),
-      ),
-      child: Row(
-        children: [
-          const Icon(
-            Icons.monitor_heart,
-            color: RetroTerminalTheme.amberColor,
-            size: 20,
-          ),
-          const SizedBox(width: 8),
-          Text(
-            'VITALS MONITOR',
-            style: RetroTerminalTheme.terminalHeader.copyWith(
-              letterSpacing: 2,
-            ),
-          ),
-          const Spacer(),
-          Text(
-            'ID: ${widget.machine.id.substring(widget.machine.id.length - 4).toUpperCase()}',
-            style: RetroTerminalTheme.terminalText.copyWith(
-              fontSize: 11,
-              color: RetroTerminalTheme.amberDim,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  // _buildVitalsHeader() removed - replaced by _buildAggregatedHeader()
 
-  Widget _buildVitalsSummary_DEPRECATED() {
-    final total = widget.machine.ipAddresses.length;
-    final stable = _latestResults.values
-        .where((r) => r.status == PingStatus.excellent)
-        .length;
-    final caution = _latestResults.values
-        .where((r) => r.status == PingStatus.fair)
-        .length;
-    final critical = _latestResults.values
-        .where((r) => r.status == PingStatus.poor)
-        .length;
-    final flatline = _latestResults.values
-        .where((r) => r.status == PingStatus.timeout)
-        .length;
-
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: RetroTerminalTheme.surfaceColor.withOpacity(0.5),
-        border: Border(
-          bottom: BorderSide(
-            color: RetroTerminalTheme.amberDim,
-            width: 1,
-          ),
-        ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _buildVitalStat('STABLE', stable, total, RetroTerminalTheme.vitalsStable),
-          _buildVitalStat('CAUTION', caution, total, RetroTerminalTheme.vitalsCaution),
-          _buildVitalStat('CRITICAL', critical, total, RetroTerminalTheme.vitalsCritical),
-          _buildVitalStat('FLATLINE', flatline, total, RetroTerminalTheme.vitalsFlatline),
-        ],
-      ),
-    );
-  }
+  // _buildVitalsSummary() removed - replaced by AggregatedEndpointChart
 
   Widget _buildVitalStat(String label, int count, int total, Color color) {
     return Column(
@@ -351,22 +278,7 @@ class _MonitorScreenState extends State<MonitorScreen> {
     );
   }
 
-  Widget _buildLegend_DEPRECATED() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: Wrap(
-        alignment: WrapAlignment.center,
-        spacing: 16,
-        runSpacing: 8,
-        children: [
-          _buildLegendItem('STABLE (<${_settings.excellentThreshold}ms)', RetroTerminalTheme.vitalsStable),
-          _buildLegendItem('CAUTION (<${_settings.fairThreshold}ms)', RetroTerminalTheme.vitalsCaution),
-          _buildLegendItem('CRITICAL (>${_settings.fairThreshold}ms)', RetroTerminalTheme.vitalsCritical),
-          _buildLegendItem('FLATLINE', RetroTerminalTheme.vitalsFlatline),
-        ],
-      ),
-    );
-  }
+  // _buildLegend() removed - replaced by AggregatedChartLegend
 
   Widget _buildLegendItem(String label, Color color) {
     return Row(
@@ -697,9 +609,7 @@ class _MonitorScreenState extends State<MonitorScreen> {
     }
   }
 
-  String _formatTime(DateTime time) {
-    return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}:${time.second.toString().padLeft(2, '0')}';
-  }
+  // _formatTime() removed - unused after vitals replacement
 
   int _calculateAverage(List<PingResult> history) {
     final valid = history.where((r) => r.responseTimeMs != null).toList();
