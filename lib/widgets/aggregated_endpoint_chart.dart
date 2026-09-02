@@ -111,18 +111,18 @@ class _AggregatedChartPainter extends CustomPainter {
     final random = Random(42); // Fixed seed for consistent colors per session
     final endpoints = allHistory.keys.toList();
     
-    // Predefined color palette for better visibility
+    // Neutral color palette - no green/red status associations
     final colorPalette = [
-      RetroTerminalTheme.vitalsStable,
-      RetroTerminalTheme.vitalsCaution,
-      RetroTerminalTheme.vitalsCritical,
+      const Color(0xFF00BFFF), // Deep Sky Blue
+      const Color(0xFF9370DB), // Medium Purple
       const Color(0xFF00FFFF), // Cyan
-      const Color(0xFFFF00FF), // Magenta  
-      const Color(0xFFFFFF00), // Yellow
-      const Color(0xFF00FF00), // Green
-      const Color(0xFFFF8000), // Orange
-      const Color(0xFF8000FF), // Purple
-      const Color(0xFF0080FF), // Blue
+      const Color(0xFFFF00FF), // Magenta
+      const Color(0xFF4169E1), // Royal Blue
+      const Color(0xFF8A2BE2), // Blue Violet
+      const Color(0xFF00CED1), // Dark Turquoise
+      const Color(0xFFFF1493), // Deep Pink
+      const Color(0xFF1E90FF), // Dodger Blue
+      const Color(0xFFBA55D3), // Medium Orchid
     ];
     
     for (int i = 0; i < endpoints.length; i++) {
@@ -472,16 +472,16 @@ class AggregatedChartLegend extends StatelessWidget {
     final colors = <String, Color>{};
     
     final colorPalette = [
-      RetroTerminalTheme.vitalsStable,
-      RetroTerminalTheme.vitalsCaution,
-      RetroTerminalTheme.vitalsCritical,
+      const Color(0xFF00BFFF), // Deep Sky Blue
+      const Color(0xFF9370DB), // Medium Purple
       const Color(0xFF00FFFF), // Cyan
-      const Color(0xFFFF00FF), // Magenta  
-      const Color(0xFFFFFF00), // Yellow
-      const Color(0xFF00FF00), // Green
-      const Color(0xFFFF8000), // Orange
-      const Color(0xFF8000FF), // Purple
-      const Color(0xFF0080FF), // Blue
+      const Color(0xFFFF00FF), // Magenta
+      const Color(0xFF4169E1), // Royal Blue
+      const Color(0xFF8A2BE2), // Blue Violet
+      const Color(0xFF00CED1), // Dark Turquoise
+      const Color(0xFFFF1493), // Deep Pink
+      const Color(0xFF1E90FF), // Dodger Blue
+      const Color(0xFFBA55D3), // Medium Orchid
     ];
     
     for (int i = 0; i < endpoints.length; i++) {
