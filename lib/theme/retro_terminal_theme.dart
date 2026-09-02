@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-/// Retro IBM Terminal Theme
-/// Amber phosphor on dark grey background with medical vitals styling
+/// 1995 Soda Fountain Neon Palace Theme
+/// Electric blues and hot magentas on deep space background - TUBULAR!
 class RetroTerminalTheme {
-  // Core colors
-  static const Color backgroundColor = Color(0xFF1a1a1a);
-  static const Color surfaceColor = Color(0xFF252525);
-  static const Color amberColor = Color(0xFFffb000);
-  static const Color amberDim = Color(0xFFcc8c00);
-  static const Color amberBright = Color(0xFFFFD700);
+  // Core 90s Neon Palace colors
+  static const Color backgroundColor = Color(0xFF0a0a1a);  // Deep space blue
+  static const Color surfaceColor = Color(0xFF1a1a2a);     // Dark electric purple
+  static const Color amberColor = Color(0xFF00BFFF);       // Deep Sky Blue (primary)
+  static const Color amberDim = Color(0xFF4169E1);         // Royal Blue (secondary)
+  static const Color amberBright = Color(0xFF00FFFF);      // Electric Cyan (highlight)
   
-  // Vitals monitor colors
-  static const Color vitalsStable = Color(0xFF00ff41);    // Green - stable
-  static const Color vitalsCaution = Color(0xFFffff00);   // Yellow - caution
-  static const Color vitalsCritical = Color(0xFFff3333);  // Red - critical
-  static const Color vitalsFlatline = Color(0xFF666666);  // Grey - flatline/no data
+  // 90s Neon Status colors - NO MORE GREEN/RED CONFUSION!
+  static const Color vitalsStable = Color(0xFF00FFFF);    // Electric Cyan - stable
+  static const Color vitalsCaution = Color(0xFFFF1493);   // Hot Pink - caution  
+  static const Color vitalsCritical = Color(0xFF9370DB);  // Medium Purple - critical
+  static const Color vitalsFlatline = Color(0xFF555577);  // Dark Blue Grey - flatline
   
   // Status colors mapped to vitals - use int codes: 0=excellent, 1=fair, 2=poor, 3=timeout
   static Color getVitalsColor(int statusCode) {
@@ -277,9 +277,10 @@ class CRTScanlines extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: RadialGradient(
                   center: const Alignment(0, -0.3),
-                  radius: 0.7,
+                  radius: 0.8,
                   colors: [
-                    RetroTerminalTheme.amberColor.withOpacity(0.03),
+                    RetroTerminalTheme.amberColor.withOpacity(0.08),  // More intense neon glow
+                    RetroTerminalTheme.amberBright.withOpacity(0.04), // Cyan edge glow
                     Colors.transparent,
                   ],
                 ),
