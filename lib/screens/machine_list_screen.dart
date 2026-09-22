@@ -16,6 +16,7 @@ class MachineListScreen extends StatefulWidget {
 class _MachineListScreenState extends State<MachineListScreen> {
   final StorageService _storage = StorageService();
   List<Machine> _machines = [];
+  final Map<String, bool> _expandedGroups = {};
   bool _isLoading = true;
 
   @override
@@ -27,10 +28,37 @@ class _MachineListScreenState extends State<MachineListScreen> {
   Future<void> _loadMachines() async {
     setState(() => _isLoading = true);
     final machines = await _storage.loadMachines();
+    _initExpandedGroups(machines);
     setState(() {
       _machines = machines;
       _isLoading = false;
     });
+  }
+
+  void _initExpandedGroups(List<Machine> machines) {
+    final groups = machines.map((m) => m.displayGroup).toSet();
+    for (final g in groups) {
+      _expandedGroups.putIfAbsent(g, () => true);
+    }
+  }
+
+  Map<String, List<Machine>> get _groupedMachines {
+    final map = <String, List<Machine>>{};
+    for (final m in _machines) {
+      final g = m.displayGroup;
+      map.putIfAbsent(g, () => []).add(m);
+    }
+    return map;
+  }
+
+  List<String> get _sortedGroups {
+    final groups = _groupedMachines.keys.toList();
+    groups.sort((a, b) {
+      if (a == 'UNGROUPED') return 1;
+      if (b == 'UNGROUPED') return -1;
+      return a.compareTo(b);
+    });
+    return groups;
   }
 
   Future<void> _deleteMachine(Machine machine) async {
@@ -192,13 +220,76 @@ class _MachineListScreenState extends State<MachineListScreen> {
   }
 
   Widget _buildMachineList() {
-    return ListView.builder(
+    final grouped = _groupedMachines;
+    final groups = _sortedGroups;
+    final items = <Widget>[];
+    for (final groupName in groups) {
+      final machines = grouped[groupName]!;
+      items.add(_buildGroupHeader(groupName, machines.length));
+      if (_expandedGroups[groupName] ?? true) {
+        for (final machine in machines) {
+          items.add(_buildMachineCard(machine));
+        }
+      }
+    }
+    return ListView(
       padding: const EdgeInsets.all(16),
-      itemCount: _machines.length,
-      itemBuilder: (context, index) {
-        final machine = _machines[index];
-        return _buildMachineCard(machine);
+      children: items,
+    );
+  }
+
+  Widget _buildGroupHeader(String groupName, int count) {
+    final isExpanded = _expandedGroups[groupName] ?? true;
+    return InkWell(
+      onTap: () {
+        setState(() {
+          _expandedGroups[groupName] = !isExpanded;
+        });
       },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 4, top: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          color: RetroTerminalTheme.surfaceColor,
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(
+            color: RetroTerminalTheme.amberColor,
+            width: 1,
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              isExpanded ? Icons.folder_open : Icons.folder,
+              color: RetroTerminalTheme.amberColor,
+              size: 18,
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                groupName.toUpperCase(),
+                style: RetroTerminalTheme.terminalHeader.copyWith(
+                  fontSize: 14,
+                  letterSpacing: 2,
+                ),
+              ),
+            ),
+            Text(
+              '[$count]',
+              style: RetroTerminalTheme.terminalText.copyWith(
+                color: RetroTerminalTheme.amberDim,
+                fontSize: 12,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Icon(
+              isExpanded ? Icons.expand_less : Icons.expand_more,
+              color: RetroTerminalTheme.amberDim,
+              size: 18,
+            ),
+          ],
+        ),
+      ),
     );
   }
 

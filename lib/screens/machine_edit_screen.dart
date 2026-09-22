@@ -16,6 +16,7 @@ class MachineEditScreen extends StatefulWidget {
 class _MachineEditScreenState extends State<MachineEditScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
+  final _groupController = TextEditingController();
   final _ipController = TextEditingController();
   final StorageService _storage = StorageService();
 
@@ -29,6 +30,7 @@ class _MachineEditScreenState extends State<MachineEditScreen> {
     if (widget.machine != null) {
       _machineId = widget.machine!.id;
       _nameController.text = widget.machine!.name;
+      _groupController.text = widget.machine!.group ?? '';
       _ipAddresses.addAll(widget.machine!.ipAddresses);
     } else {
       _machineId = DateTime.now().millisecondsSinceEpoch.toString();
@@ -38,6 +40,7 @@ class _MachineEditScreenState extends State<MachineEditScreen> {
   @override
   void dispose() {
     _nameController.dispose();
+    _groupController.dispose();
     _ipController.dispose();
     super.dispose();
   }
@@ -101,6 +104,7 @@ class _MachineEditScreenState extends State<MachineEditScreen> {
       id: _machineId,
       name: _nameController.text.trim(),
       ipAddresses: List.from(_ipAddresses),
+      group: _groupController.text.trim().isEmpty ? null : _groupController.text.trim(),
     );
 
     if (widget.machine != null) {
@@ -196,6 +200,32 @@ class _MachineEditScreenState extends State<MachineEditScreen> {
                   return null;
                 },
                 textInputAction: TextInputAction.next,
+              ),
+              const SizedBox(height: 24),
+
+              // Group Section
+              TerminalHeader(
+                title: 'GROUP / FOLDER',
+                subtitle: 'OPTIONAL: ORGANIZE MACHINES INTO GROUPS',
+                icon: Icons.folder_outlined,
+              ),
+              const SizedBox(height: 12),
+              
+              TextFormField(
+                controller: _groupController,
+                style: RetroTerminalTheme.terminalText,
+                decoration: InputDecoration(
+                  hintText: 'E.G. SURFACE FLEET, UNDERGROUND HAULERS',
+                  hintStyle: RetroTerminalTheme.terminalText.copyWith(
+                    color: RetroTerminalTheme.amberDim.withOpacity(0.5),
+                  ),
+                  prefixIcon: const Icon(
+                    Icons.folder,
+                    color: RetroTerminalTheme.amberColor,
+                  ),
+                ),
+                textInputAction: TextInputAction.next,
+                textCapitalization: TextCapitalization.characters,
               ),
               const SizedBox(height: 32),
 
