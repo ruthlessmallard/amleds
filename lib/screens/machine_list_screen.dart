@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/machine.dart';
 import '../services/storage_service.dart';
+import '../services/machine_share_service.dart';
 import '../theme/retro_terminal_theme.dart';
 import 'machine_edit_screen.dart';
 import 'monitor_screen.dart';
@@ -23,6 +24,38 @@ class _MachineListScreenState extends State<MachineListScreen> {
   void initState() {
     super.initState();
     _loadMachines();
+  }
+
+  Future<void> _shareAllMachines() async {
+    if (_machines.isEmpty) {
+      _showSnack('NO MACHINES TO EXPORT', RetroTerminalTheme.vitalsCaution);
+      return;
+    }
+    await MachineShareService.shareAllMachines(_machines);
+  }
+
+  Future<void> _importMachines() async {
+    final result = await MachineShareService.importFromClipboard();
+    _showSnack(result.message.toUpperCase(), 
+      result.success ? RetroTerminalTheme.vitalsStable : RetroTerminalTheme.vitalsCritical);
+    if (result.success) {
+      _loadMachines();
+    }
+  }
+
+  void _showSnack(String message, Color color) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          style: RetroTerminalTheme.terminalText.copyWith(
+            color: RetroTerminalTheme.backgroundColor,
+          ),
+        ),
+        backgroundColor: color,
+        duration: const Duration(seconds: 3),
+      ),
+    );
   }
 
   Future<void> _loadMachines() async {
@@ -125,6 +158,22 @@ class _MachineListScreenState extends State<MachineListScreen> {
           ],
         ),
         actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.ios_share,
+              color: RetroTerminalTheme.amberColor,
+            ),
+            onPressed: _shareAllMachines,
+            tooltip: 'SHARE ALL',
+          ),
+          IconButton(
+            icon: const Icon(
+              Icons.download,
+              color: RetroTerminalTheme.amberColor,
+            ),
+            onPressed: _importMachines,
+            tooltip: 'IMPORT',
+          ),
           IconButton(
             icon: const Icon(
               Icons.settings,
