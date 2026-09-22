@@ -5,6 +5,7 @@ import '../models/ping_result.dart';
 import '../models/settings.dart';
 import '../services/ping_service.dart';
 import '../services/storage_service.dart';
+import '../services/export_service.dart';
 import '../theme/retro_terminal_theme.dart';
 
 import '../widgets/aggregated_endpoint_chart.dart';
@@ -70,6 +71,46 @@ class _MonitorScreenState extends State<MonitorScreen> {
         _stopMonitoring();
       }
     });
+  }
+
+  Future<void> _exportLogs() async {
+    if (_history.isEmpty) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'NO DATA TO EXPORT',
+              style: RetroTerminalTheme.terminalText.copyWith(
+                color: RetroTerminalTheme.backgroundColor,
+              ),
+            ),
+            backgroundColor: RetroTerminalTheme.vitalsCaution,
+          ),
+        );
+      }
+      return;
+    }
+
+    try {
+      await ExportService.exportSessionLogs(
+        machine: widget.machine,
+        history: _history,
+      );
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'EXPORT FAILED: $e',
+              style: RetroTerminalTheme.terminalText.copyWith(
+                color: RetroTerminalTheme.backgroundColor,
+              ),
+            ),
+            backgroundColor: RetroTerminalTheme.vitalsCritical,
+          ),
+        );
+      }
+    }
   }
 
   @override
@@ -143,6 +184,14 @@ class _MonitorScreenState extends State<MonitorScreen> {
                 ),
               ],
             ),
+          ),
+          IconButton(
+            icon: const Icon(
+              Icons.share,
+              color: RetroTerminalTheme.amberColor,
+            ),
+            onPressed: _exportLogs,
+            tooltip: 'EXPORT LOGS',
           ),
           IconButton(
             icon: Icon(
