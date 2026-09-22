@@ -7,13 +7,13 @@ import '../theme/retro_terminal_theme.dart';
 class AggregatedEndpointChart extends StatelessWidget {
   final Map<String, List<PingResult>> allHistory;
   final double height;
-  final int criticalThreshold;
+  final int yAxisMaxMs;
 
   const AggregatedEndpointChart({
     super.key,
     required this.allHistory,
     this.height = 120,
-    required this.criticalThreshold,
+    this.yAxisMaxMs = 60,
   });
 
   @override
@@ -77,7 +77,7 @@ class AggregatedEndpointChart extends StatelessWidget {
                 Expanded(
                   child: CustomPaint(
                     size: Size(double.infinity, height - 60),
-                    painter: _AggregatedChartPainter(allHistory, criticalThreshold),
+                    painter: _AggregatedChartPainter(allHistory, yAxisMaxMs),
                   ),
                 ),
               ],
@@ -100,10 +100,10 @@ class AggregatedEndpointChart extends StatelessWidget {
 
 class _AggregatedChartPainter extends CustomPainter {
   final Map<String, List<PingResult>> allHistory;
-  final int criticalThreshold;
+  final int yAxisMaxMs;
   final Map<String, Color> _endpointColors = {};
 
-  _AggregatedChartPainter(this.allHistory, this.criticalThreshold) {
+  _AggregatedChartPainter(this.allHistory, this.yAxisMaxMs) {
     _generateRandomColors();
   }
 
@@ -214,9 +214,9 @@ class _AggregatedChartPainter extends CustomPainter {
       if (result.status == PingStatus.timeout || result.responseTimeMs == null) {
         normalizedY = 0.0; // Bottom for timeout/error
       } else {
-        // Normalize to 0-1, with criticalThreshold = bottom, 0ms = top
+        // Normalize to 0-1, with yAxisMaxMs = bottom, 0ms = top
         // Clip values that exceed critical threshold at the top
-        normalizedY = 1.0 - (result.responseTimeMs! / criticalThreshold).clamp(0.0, 1.0);
+        normalizedY = 1.0 - (result.responseTimeMs! / yAxisMaxMs).clamp(0.0, 1.0);
       }
       
       final y = size.height - (normalizedY * size.height);
@@ -241,7 +241,7 @@ class _AggregatedChartPainter extends CustomPainter {
       if (lastResult.status == PingStatus.timeout || lastResult.responseTimeMs == null) {
         lastNormalizedY = 0.0;
       } else {
-        lastNormalizedY = 1.0 - (lastResult.responseTimeMs! / criticalThreshold).clamp(0.0, 1.0);
+        lastNormalizedY = 1.0 - (lastResult.responseTimeMs! / yAxisMaxMs).clamp(0.0, 1.0);
       }
       final lastY = size.height - (lastNormalizedY * size.height);
       

@@ -107,8 +107,8 @@ class PingHistoryChart extends StatelessWidget {
     if (result.status == PingStatus.timeout) return 1.0;
     if (result.responseTimeMs == null) return 0.1;
     
-    // Normalize: max 500ms = full height
-    const maxMs = 500;
+    // Normalize: max 60ms = full height, anything over pegs at top
+    const maxMs = 60;
     final normalized = result.responseTimeMs! / maxMs;
     return normalized.clamp(0.1, 1.0);
   }
@@ -188,7 +188,7 @@ class _WaveformPainter extends CustomPainter {
       if (result.status == PingStatus.timeout || result.responseTimeMs == null) {
         normalizedY = 0; // Bottom for timeout
       } else {
-        normalizedY = 1 - (result.responseTimeMs! / 500).clamp(0.0, 1.0);
+        normalizedY = 1 - (result.responseTimeMs! / 60).clamp(0.0, 1.0);
       }
       
       final y = size.height - (normalizedY * size.height);

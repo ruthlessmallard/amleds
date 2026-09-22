@@ -164,7 +164,7 @@ class _MonitorScreenState extends State<MonitorScreen> {
             AggregatedEndpointChart(
               allHistory: _history,
               height: 140,
-              criticalThreshold: _settings.fairThreshold, // Use fair threshold as critical ceiling
+              yAxisMaxMs: 60,
             ),
             
             // Chart Legend (replaces individual cards)
