@@ -239,7 +239,7 @@ class _AggregatedChartPainter extends CustomPainter {
       final lastX = (history.length - 1) * stepX;
       double lastNormalizedY;
       if (lastResult.status == PingStatus.timeout || lastResult.responseTimeMs == null) {
-        lastNormalizedY = 0.0;
+        lastNormalizedY = 1.0; // TOP for timeout/error
       } else {
         lastNormalizedY = 1.0 - (lastResult.responseTimeMs! / yAxisMaxMs).clamp(0.0, 1.0);
       }
