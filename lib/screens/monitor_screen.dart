@@ -213,7 +213,7 @@ class _MonitorScreenState extends State<MonitorScreen> {
             AggregatedEndpointChart(
               allHistory: _history,
               height: 140,
-              yAxisMaxMs: 60,
+              yAxisMaxMs: _settings.fairThreshold,
             ),
             
             // Chart Legend (replaces individual cards)
