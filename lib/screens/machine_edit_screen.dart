@@ -174,7 +174,7 @@ class _MachineEditScreenState extends State<MachineEditScreen> {
               const SizedBox(height: 24),
 
               // Machine Name Section
-              TerminalHeader(
+              const TerminalHeader(
                 title: 'MACHINE NAME',
                 icon: Icons.computer,
               ),
@@ -204,7 +204,7 @@ class _MachineEditScreenState extends State<MachineEditScreen> {
               const SizedBox(height: 24),
 
               // Group Section
-              TerminalHeader(
+              const TerminalHeader(
                 title: 'GROUP / FOLDER',
                 subtitle: 'OPTIONAL: ORGANIZE MACHINES INTO GROUPS',
                 icon: Icons.folder_outlined,
@@ -230,7 +230,7 @@ class _MachineEditScreenState extends State<MachineEditScreen> {
               const SizedBox(height: 32),
 
               // IP Addresses Section
-              TerminalHeader(
+              const TerminalHeader(
                 title: 'IP ADDRESSES',
                 subtitle: 'ADD ALL ENDPOINTS TO MONITOR',
                 icon: Icons.network_check,

@@ -230,7 +230,7 @@ class _MonitorScreenState extends State<MonitorScreen> {
   Widget _buildAggregatedHeader() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: RetroTerminalTheme.surfaceColor,
         border: Border(
           bottom: BorderSide(

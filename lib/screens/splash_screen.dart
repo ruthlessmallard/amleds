@@ -251,28 +251,7 @@ and spontaneous career reassessment.''';
     );
   }
 
-  Widget _buildHeader() {
-    return Row(
-      children: [
-        Container(
-          width: 12,
-          height: 20,
-          color: const Color(0xFFffb000),
-        ),
-        const SizedBox(width: 8),
-        const Text(
-          'AMLEDS TERMINAL v1.0',
-          style: TextStyle(
-            color: Color(0xFFffb000),
-            fontFamily: 'monospace',
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 2,
-          ),
-        ),
-      ],
-    );
-  }
+
 
   Widget _buildBlinkingCursor() {
     return TweenAnimationBuilder<double>(

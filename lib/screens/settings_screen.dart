@@ -163,7 +163,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     const SizedBox(height: 32),
 
                     // Threshold Settings Section
-                    TerminalHeader(
+                    const TerminalHeader(
                       title: 'LATENCY THRESHOLDS',
                       subtitle: 'CONFIGURE VITALS MONITOR COLOR CODING',
                       icon: Icons.speed,
@@ -243,7 +243,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     const SizedBox(height: 32),
 
                     // Monitoring Settings Section
-                    TerminalHeader(
+                    const TerminalHeader(
                       title: 'MONITORING PARAMETERS',
                       subtitle: 'CONFIGURE PING INTERVAL AND DATA RETENTION',
                       icon: Icons.timer,

@@ -460,7 +460,7 @@ class AggregatedChartLegend extends StatelessWidget {
                 ],
               ),
             );
-          }).toList(),
+          }),
         ],
       ),
     );
