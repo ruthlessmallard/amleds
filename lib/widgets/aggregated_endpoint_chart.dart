@@ -210,13 +210,12 @@ class _AggregatedChartPainter extends CustomPainter {
       final x = i * stepX;
       
       // Calculate Y based on response time, scaled to critical threshold
+      // 0ms = BOTTOM, yAxisMaxMs = TOP, timeouts spike ABOVE top
       double normalizedY;
       if (result.status == PingStatus.timeout || result.responseTimeMs == null) {
-        normalizedY = 1.0; // TOP for timeout/error - visually alarming
+        normalizedY = 1.2; // ABOVE TOP for timeout - visually alarming
       } else {
-        // Normalize to 0-1, with yAxisMaxMs = bottom, 0ms = top
-        // Clip values that exceed critical threshold at the top
-        normalizedY = 1.0 - (result.responseTimeMs! / yAxisMaxMs).clamp(0.0, 1.0);
+        normalizedY = (result.responseTimeMs! / yAxisMaxMs).clamp(0.0, 1.0);
       }
       
       final y = size.height - (normalizedY * size.height);
@@ -239,9 +238,9 @@ class _AggregatedChartPainter extends CustomPainter {
       final lastX = (history.length - 1) * stepX;
       double lastNormalizedY;
       if (lastResult.status == PingStatus.timeout || lastResult.responseTimeMs == null) {
-        lastNormalizedY = 1.0; // TOP for timeout/error
+        lastNormalizedY = 1.2; // ABOVE TOP for timeout - visually alarming
       } else {
-        lastNormalizedY = 1.0 - (lastResult.responseTimeMs! / yAxisMaxMs).clamp(0.0, 1.0);
+        lastNormalizedY = (lastResult.responseTimeMs! / yAxisMaxMs).clamp(0.0, 1.0);
       }
       final lastY = size.height - (lastNormalizedY * size.height);
       
