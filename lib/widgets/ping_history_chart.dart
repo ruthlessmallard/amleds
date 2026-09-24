@@ -104,8 +104,10 @@ class PingHistoryChart extends StatelessWidget {
   }
 
   double _calculateHeight(PingResult result) {
-    if (result.status == PingStatus.timeout) return 1.0;
-    if (result.responseTimeMs == null) return 0.1;
+    // Failed pings (timeout, OL, null) spike to TOP of graph
+    if (result.status == PingStatus.timeout || result.responseTimeMs == null) {
+      return 1.0;
+    }
     
     // Normalize: max 60ms = full height, anything over pegs at top
     const maxMs = 60;
@@ -184,9 +186,10 @@ class _WaveformPainter extends CustomPainter {
       final x = i * stepX;
       
       // Calculate Y based on response time (inverted, lower is better)
+      // TIMEOUTS/OL SPIKE TO TOP (normalizedY = 1) to indicate failure
       double normalizedY;
       if (result.status == PingStatus.timeout || result.responseTimeMs == null) {
-        normalizedY = 0; // Bottom for timeout
+        normalizedY = 1.0; // TOP for timeout/failure - visually alarming
       } else {
         normalizedY = 1 - (result.responseTimeMs! / 60).clamp(0.0, 1.0);
       }
@@ -201,7 +204,7 @@ class _WaveformPainter extends CustomPainter {
         final prevResult = history[i - 1];
         double prevNormalizedY;
         if (prevResult.status == PingStatus.timeout || prevResult.responseTimeMs == null) {
-          prevNormalizedY = 0;
+          prevNormalizedY = 1.0; // TOP for timeout/failure
         } else {
           prevNormalizedY = 1 - (prevResult.responseTimeMs! / 500).clamp(0.0, 1.0);
         }
