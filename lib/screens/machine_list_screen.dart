@@ -35,11 +35,79 @@ class _MachineListScreenState extends State<MachineListScreen> {
   }
 
   Future<void> _importMachines() async {
-    final result = await MachineShareService.importFromClipboard();
-    _showSnack(result.message.toUpperCase(), 
-      result.success ? RetroTerminalTheme.vitalsStable : RetroTerminalTheme.vitalsCritical);
-    if (result.success) {
-      _loadMachines();
+    final controller = TextEditingController();
+    final result = await showDialog<ImportResult>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: RetroTerminalTheme.backgroundColor,
+        title: Text(
+          'IMPORT MACHINES',
+          style: RetroTerminalTheme.terminalText.copyWith(
+            color: RetroTerminalTheme.amberColor,
+          ),
+        ),
+        content: TextField(
+          controller: controller,
+          maxLines: 10,
+          minLines: 5,
+          style: RetroTerminalTheme.terminalText.copyWith(
+            color: RetroTerminalTheme.amberColor,
+            fontSize: 12,
+          ),
+          decoration: InputDecoration(
+            hintText: 'Paste JSON here...',
+            hintStyle: RetroTerminalTheme.terminalText.copyWith(
+              color: RetroTerminalTheme.amberColor.withOpacity(0.5),
+            ),
+            border: OutlineInputBorder(
+              borderSide: BorderSide(color: RetroTerminalTheme.amberColor),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: RetroTerminalTheme.amberColor.withOpacity(0.5)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: RetroTerminalTheme.amberColor),
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              'CANCEL',
+              style: RetroTerminalTheme.terminalText.copyWith(
+                color: RetroTerminalTheme.vitalsCaution,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              final text = controller.text.trim();
+              if (text.isEmpty) {
+                Navigator.pop(context, ImportResult(success: false, message: 'Empty input'));
+                return;
+              }
+              MachineShareService.importFromJson(text).then((result) {
+                Navigator.pop(context, result);
+              });
+            },
+            child: Text(
+              'IMPORT',
+              style: RetroTerminalTheme.terminalText.copyWith(
+                color: RetroTerminalTheme.vitalsStable,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    
+    if (result != null) {
+      _showSnack(result.message.toUpperCase(), 
+        result.success ? RetroTerminalTheme.vitalsStable : RetroTerminalTheme.vitalsCritical);
+      if (result.success) {
+        _loadMachines();
+      }
     }
   }
 
