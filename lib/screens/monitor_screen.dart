@@ -204,24 +204,26 @@ class _MonitorScreenState extends State<MonitorScreen> {
         ],
       ),
       body: CRTScanlines(
-        child: Column(
-          children: [
-            // Aggregated Endpoints Chart Header
-            _buildAggregatedHeader(),
-            
-            // All Endpoints Chart
-            AggregatedEndpointChart(
-              allHistory: _history,
-              height: 140,
-              yAxisMaxMs: _settings.fairThreshold,
-            ),
-            
-            // Chart Legend (replaces individual cards)
-            AggregatedChartLegend(
-              allHistory: _history,
-              latestResults: _latestResults,
-            ),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              // Aggregated Endpoints Chart Header
+              _buildAggregatedHeader(),
+              
+              // All Endpoints Chart
+              AggregatedEndpointChart(
+                allHistory: _history,
+                height: 140,
+                yAxisMaxMs: _settings.fairThreshold,
+              ),
+              
+              // Chart Legend (replaces individual cards)
+              AggregatedChartLegend(
+                allHistory: _history,
+                latestResults: _latestResults,
+              ),
+            ],
+          ),
         ),
       ),
     );
