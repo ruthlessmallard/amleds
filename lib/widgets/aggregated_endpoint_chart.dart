@@ -212,7 +212,7 @@ class _AggregatedChartPainter extends CustomPainter {
       // Calculate Y based on response time, scaled to critical threshold
       double normalizedY;
       if (result.status == PingStatus.timeout || result.responseTimeMs == null) {
-        normalizedY = 0.0; // Bottom for timeout/error
+        normalizedY = 1.0; // TOP for timeout/error - visually alarming
       } else {
         // Normalize to 0-1, with yAxisMaxMs = bottom, 0ms = top
         // Clip values that exceed critical threshold at the top
