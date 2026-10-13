@@ -78,8 +78,13 @@ people or equipment. Provided with **no warranty** of any kind.
 
 ## License
 
-Licensed under the **Apache License, Version 2.0**.
-See [`LICENSE`](LICENSE).
+Licensed under **Creative Commons Attribution-NonCommercial-NoDerivatives 4.0
+International (CC BY-NC-ND 4.0)** — see [`LICENSE`](LICENSE).
+
+You may **view, run, and share this work verbatim** for non-commercial purposes,
+with credit. You may **not** modify it, rebrand it, or use it commercially.
+
+Full terms: https://creativecommons.org/licenses/by-nc-nd/4.0/
 
 Third-party components and their licenses: see
 [`THIRD-PARTY-NOTICES.md`](THIRD-PARTY-NOTICES.md).
