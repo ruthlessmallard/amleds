@@ -64,23 +64,25 @@ adb install build/app/outputs/flutter-apk/app-release.apk
 
 ---
 
+## ⚠️ Scope & Safety Notice
+
+AMLEDS is a **personal project, shared as-is**. It is a **diagnostic aid — not a
+safety device** — and is **not certified, validated, or intended for
+safety-of-life, regulatory, or compliance-critical use**. Readings may be wrong
+or misleading. Do not rely on it for any decision affecting the safety of
+people or equipment. Provided with **no warranty** of any kind.
+
 ## Copyright
 
 © 2026 Shawn Baird
 
 ## License
 
-This work is licensed under the **Creative Commons Attribution-NonCommercial 4.0 International License**.
+Licensed under the **Apache License, Version 2.0**.
+See [`LICENSE`](LICENSE).
 
-You are free to:
-- **Share** — copy and redistribute the material in any medium or format
-- **Adapt** — remix, transform, and build upon the material
-
-Under the following terms:
-- **Attribution** — You must give appropriate credit
-- **NonCommercial** — You may not use the material for commercial purposes
-
-Full license text: https://creativecommons.org/licenses/by-nc/4.0/
+Third-party components and their licenses: see
+[`THIRD-PARTY-NOTICES.md`](THIRD-PARTY-NOTICES.md).
 
 ---
 
