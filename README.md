@@ -70,7 +70,7 @@ AMLEDS is a **personal project, shared as-is**. It is a **diagnostic aid — not
 safety device** — and is **not certified, validated, or intended for
 safety-of-life, regulatory, or compliance-critical use**. Readings may be wrong
 or misleading. Do not rely on it for any decision affecting the safety of
-people or equipment. Provided with **no warranty** of any kind.
+people or equipment. do not make monetary decisions based on the output or readings from this app. Provided with **no warranty** of any kind.
 
 ## Copyright
 
@@ -91,4 +91,4 @@ Third-party components and their licenses: see
 
 ---
 
-*AMLEDS — field diagnostics for heavy machinery. Use at your own risk. Not a replacement for proper network analysis tools.*
+*AMLEDS — field diagnostics for network machinery. Use at your own risk. Not a replacement for proper network analysis tools.*
