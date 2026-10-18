@@ -1,6 +1,6 @@
 # AMLEDS
 
-**Latency Evaluation & Diagnostic System for network connected modules**
+**Aggregate Module Latency Evaluation & Diagnostic System**
 
 A network diagnostic tool for monitoring network connected modules with static IPs on Android. Built for field troubleshooting when you need a quick health check without lugging a laptop.
 
