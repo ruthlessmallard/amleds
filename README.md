@@ -1,8 +1,8 @@
 # AMLEDS
 
-**Autonomous Machine Latency Evaluation & Diagnostic System**
+**Latency Evaluation & Diagnostic System for network connected modules**
 
-A network diagnostic tool for monitoring autonomous equipment with static IPs on Android. Built for field troubleshooting when you need a quick health check without lugging a laptop.
+A network diagnostic tool for monitoring network connected modules with static IPs on Android. Built for field troubleshooting when you need a quick health check without lugging a laptop.
 
 Think `mtr` or `ping` with a vintage terminal aesthetic and battery-friendly operation.
 
